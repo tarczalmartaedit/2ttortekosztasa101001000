@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minecraft OsztóMester – tizedes : 10 / 100 / 1000</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#0b1b10; --bg2:#0f2a17;
+      --panel:#1a3a21; --panel2:#244a2b;
+      --text:#e7ffe7; --muted:#b7d7b7;
+      --line:#3e6a45;
+      --accent:#45d36a; --accent2:#f2c94c; --danger:#ff5c5c;
+      --shadow: 0 10px 0 rgba(0,0,0,.35);
+      --px: "Press Start 2P", ui-monospace, Menlo, Consolas, monospace;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0; color:var(--text); min-height:100vh;
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(69,211,106,.18), transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(242,201,76,.14), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:18px 14px 28px;}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 14px;
+      background: linear-gradient(180deg, #2b5b34, #1e3f26);
+      border:4px solid #0a120c; box-shadow: var(--shadow);
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-family:var(--px);letter-spacing:.5px;}
+    .brand .icon{
+      width:38px;height:38px;
+      background:
+        linear-gradient(90deg, #7c5c3b 0 50%, #6a4d31 50% 100%),
+        linear-gradient(#4aa84f 0 55%, transparent 55% 100%);
+      border:3px solid #0a120c;
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,.08);
+    }
+    .brand .title{font-size:14px;line-height:1.2;}
+    .brand .subtitle{font-size:10px;color:var(--muted);margin-top:6px;font-family:var(--px);}
+    .badge{
+      font-family:var(--px);font-size:10px;padding:10px 10px;
+      background:#102716;border:3px solid #0a120c;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+      white-space:nowrap;
+    }
+
+    .grid{display:grid;gap:14px;grid-template-columns:1.05fr 1.4fr;margin-top:14px;}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.badge{display:none}}
+
+    .card{
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border:4px solid #0a120c; box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h2{
+      margin:0 0 12px;font-family:var(--px);font-size:12px;letter-spacing:.4px;
+      display:flex;align-items:center;gap:10px;
+    }
+    .card h2::before{
+      content:"";width:14px;height:14px;background:var(--accent);
+      border:2px solid #0a120c;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.12);
+    }
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .chips{display:flex;gap:10px;flex-wrap:wrap;}
+    .chip{
+      cursor:pointer; user-select:none;
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border:3px solid #0a120c;background:#102716;
+      font-family:var(--px);font-size:10px;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+    }
+    .chip input{accent-color:var(--accent);transform:scale(1.15);}
+    select{
+      font-family:var(--px);font-size:10px;padding:10px 12px;
+      background:#102716;color:var(--text);
+      border:3px solid #0a120c;outline:none;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+    }
+    .btn{
+      font-family:var(--px);font-size:10px;padding:10px 12px;
+      border:3px solid #0a120c;cursor:pointer;
+      background: linear-gradient(180deg, #3bd25f, #2aa447);
+      color:#07110a; box-shadow: var(--shadow);
+    }
+    .btn.secondary{background:linear-gradient(180deg,#f2c94c,#d6a92d);}
+    .btn:active{transform:translateY(2px);box-shadow:0 8px 0 rgba(0,0,0,.35);}
+
+    .status{
+      margin-top:12px;padding:10px 12px;
+      border:3px dashed #0a120c;background:#0f2214;
+      font-family:var(--px);font-size:10px;
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+
+    .question{
+      margin-top:10px;padding:18px 12px;border:4px solid #0a120c;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 10px, rgba(0,0,0,.08) 10px 20px);
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .question .big{
+      font-family:var(--px);font-size:16px;line-height:1.45;word-break:break-word;
+    }
+    .question .hint{margin-top:10px;font-family:var(--px);font-size:9px;color:var(--muted);}
+
+    .inputRow{display:flex;gap:10px;margin-top:12px;align-items:center;}
+    input[type="text"]{
+      flex:1;font-family:var(--px);font-size:12px;padding:12px 12px;
+      border:3px solid #0a120c;background:#0f2214;color:var(--text);
+      outline:none;box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+      text-align:center;
+    }
+
+    .feedback{
+      min-height:34px;margin-top:10px;padding:10px 12px;
+      border:3px solid #0a120c;background:#0f2214;
+      font-family:var(--px);font-size:10px;
+    }
+    .ok{color:var(--accent);}
+    .no{color:var(--danger);}
+    .gold{color:var(--accent2);}
+
+    .tip{
+      margin-top:12px;padding:10px 12px;border:3px solid #0a120c;
+      background:#102716;font-family:var(--px);font-size:9px;
+      color:var(--muted);line-height:1.5;
+    }
+    .footer{
+      margin-top:14px;font-family:var(--px);font-size:9px;
+      color:rgba(231,255,231,.65);text-align:right;
+    }
+    code{font-family:var(--px);font-size:9px;color:var(--accent2);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="icon" aria-hidden="true"></div>
+        <div>
+          <div class="title">Minecraft OsztóMester</div>
+          <div class="subtitle">Tizedes : 10 / 100 / 1000</div>
+        </div>
+      </div>
+      <div class="badge">Küldetés: pontos osztások!</div>
+    </div>
+
+    <div class="grid">
+      <!-- SETTINGS -->
+      <section class="card">
+        <h2>Beállítások</h2>
+
+        <div class="tip" style="margin-top:0;">
+          Válassz szintet és feladatszámot. Írd be a választ tizedesvesszővel (<code>,</code>) vagy ponttal (<code>.</code>) is.
+        </div>
+
+        <div style="height:10px"></div>
+        <div class="chips">
+          <label class="chip">
+            <input type="radio" name="level" value="steve" checked>
+            🟩 Steve (:10)
+          </label>
+          <label class="chip">
+            <input type="radio" name="level" value="alex">
+            🟨 Alex (:10, :100)
+          </label>
+          <label class="chip">
+            <input type="radio" name="level" value="creeper">
+            🟥 Creeper (:10, :100, :1000)
+          </label>
+        </div>
+
+        <div style="height:10px"></div>
+        <div class="row">
+          <select id="taskCount">
+            <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+          </select>
+
+          <button class="btn secondary" id="newSeries">Új pálya</button>
+        </div>
+
+        <div class="status" id="status">
+          <span>Feladat: 1 / 10</span>
+          <span>Helyes: 0</span>
+          <span>Hibák: 0</span>
+        </div>
+
+        <div class="tip">
+          Tipp: Osztás 10-zel → „egy hellyel balra”, 100-zal → „két hellyel”, 1000-rel → „három hellyel”.
+        </div>
+      </section>
+
+      <!-- GAME -->
+      <section class="card">
+        <h2>Feladat</h2>
+
+        <div class="question">
+          <div class="big" id="qText">3,4 : 100 = ?</div>
+          <div class="hint" id="qHint">Írd be az eredményt és nyomj Entert.</div>
+        </div>
+
+        <div class="inputRow">
+          <input id="answer" type="text" inputmode="decimal" placeholder="Válasz (pl. 0,034)" autocomplete="off" />
+          <button class="btn" id="check">Ellenőrzés</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="footer">Offline is megy • GitHub Pages kompatibilis</div>
+      </section>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const levelRadios = document.querySelectorAll('input[name="level"]');
+  const taskCountSel = document.getElementById('taskCount');
+  const newSeriesBtn = document.getElementById('newSeries');
+  const statusEl = document.getElementById('status');
+  const qText = document.getElementById('qText');
+  const qHint = document.getElementById('qHint');
+  const ans = document.getElementById('answer');
+  const checkBtn = document.getElementById('check');
+  const fb = document.getElementById('feedback');
+
+  const levelDivisors = {
+    steve: [10],
+    alex: [10, 100],
+    creeper: [10, 100, 1000]
+  };
+
+  let total = parseInt(taskCountSel.value, 10);
+  let idx = 0;
+  let correct = 0;
+  let wrong = 0;
+
+  let streakCorrect = 0;
+  let streakWrong = 0;
+
+  let current = { aStr: "0,0", aNum: 0, d: 10, answerStr: "0" };
+
+  function getLevel(){
+    return [...levelRadios].find(r => r.checked).value;
+  }
+
+  function updateStatus(){
+    statusEl.innerHTML = `
+      <span>Feladat: ${Math.min(idx+1, total)} / ${total}</span>
+      <span>Helyes: ${correct}</span>
+      <span>Hibák: ${wrong}</span>
+    `;
+  }
+
+  function normalizeInput(s){
+    return (s || "")
+      .trim()
+      .replace(/\s+/g, "")
+      .replace(",", ".");
+  }
+
+  function formatHU(n){
+    const rounded = Math.round((n + Number.EPSILON) * 1e12) / 1e12;
+    let s = String(rounded);
+    if (s.includes("e")) {
+      s = rounded.toFixed(12).replace(/0+$/,"").replace(/\.$/,"");
+    }
+    return s.replace(".", ",");
+  }
+
+  function randomDecimal(){
+    const intPart = Math.floor(Math.random()*9999) + 1; // 1..9999
+    const decDigits = [1,2,3][Math.floor(Math.random()*3)];
+    const decPart = Math.floor(Math.random() * Math.pow(10, decDigits));
+    const decStr = String(decPart).padStart(decDigits, "0");
+    const s = `${intPart}.${decStr}`;
+    return { sHU: s.replace(".", ","), num: Number(s) };
+  }
+
+  function pickDivisor(){
+    const dlist = levelDivisors[getLevel()];
+    return dlist[Math.floor(Math.random()*dlist.length)];
+  }
+
+  function newQuestion(){
+    if (idx >= total){
+      endSeries();
+      return;
+    }
+
+    const dec = randomDecimal();
+    const d = pickDivisor();
+    const result = dec.num / d;
+
+    current = {
+      aStr: dec.sHU,
+      aNum: dec.num,
+      d,
+      answerStr: formatHU(result)
+    };
+
+    // OSZTÁS JELE ":" – ahogy kérted
+    qText.textContent = `${current.aStr} : ${current.d} = ?`;
+    qHint.textContent = "Írd be az eredményt és nyomj Entert.";
+    ans.value = "";
+    ans.focus();
+    fb.textContent = "";
+    updateStatus();
+  }
+
+  function endSeries(){
+    qText.textContent = `Küldetés vége! Eredmény: ${correct} / ${total}`;
+    qHint.textContent = "Kattints az „Új pálya” gombra a folytatáshoz.";
+    fb.innerHTML = (wrong === 0)
+      ? `<span class="gold">🏆 Tökéletes! Egyetlen hiba nélkül ment!</span>`
+      : `<span class="gold">⭐ Ügyes voltál! Próbáld meg újra, és javíts a rekordodon!</span>`;
+    ans.blur();
+    updateStatus();
+  }
+
+  function isCorrect(userStr){
+    const u = normalizeInput(userStr);
+    if (u === "") return { ok:false, reason:"empty" };
+
+    const userNum = Number(u);
+    if (!Number.isFinite(userNum)) return { ok:false, reason:"nan" };
+
+    const rightNum = current.aNum / current.d;
+    const diff = Math.abs(userNum - rightNum);
+    const ok = diff < 1e-9;
+
+    return { ok, rightNum };
+  }
+
+  function praiseOrEncourage(){
+    if (streakCorrect >= 3){
+      fb.innerHTML += `<div class="gold">✨ „Szuper! Haladsz, mint egy profi bányász!”</div>`;
+      streakCorrect = 0;
+    }
+    if (streakWrong >= 3){
+      fb.innerHTML += `<div class="gold">💛 „Nem baj! Egy kis gyakorlás és menni fog!”</div>`;
+      streakWrong = 0;
+    }
+  }
+
+  function checkAnswer(){
+    if (idx >= total) return;
+
+    const res = isCorrect(ans.value);
+
+    if (res.reason === "empty"){
+      fb.innerHTML = `<span class="no">Írj be egy választ!</span>`;
+      return;
+    }
+    if (res.reason === "nan"){
+      fb.innerHTML = `<span class="no">Ez nem szám. Példa: 0,034</span>`;
+      return;
+    }
+
+    const rightStr = formatHU(current.aNum / current.d);
+
+    if (res.ok){
+      correct++;
+      streakCorrect++;
+      streakWrong = 0;
+      fb.innerHTML = `<span class="ok">✅ Helyes!</span> <span class="gold">${current.aStr} : ${current.d} = ${rightStr}</span>`;
+    } else {
+      wrong++;
+      streakWrong++;
+      streakCorrect = 0;
+      fb.innerHTML = `<span class="no">❌ Nem jó.</span> <span class="gold">Helyes: ${rightStr}</span>`;
+    }
+
+    praiseOrEncourage();
+
+    idx++;
+    updateStatus();
+
+    if (idx >= total){
+      setTimeout(endSeries, 600);
+    } else {
+      setTimeout(newQuestion, 700);
+    }
+  }
+
+  function resetSeries(){
+    total = parseInt(taskCountSel.value, 10);
+    idx = 0;
+    correct = 0;
+    wrong = 0;
+    streakCorrect = 0;
+    streakWrong = 0;
+    updateStatus();
+    newQuestion();
+  }
+
+  checkBtn.addEventListener('click', checkAnswer);
+  ans.addEventListener('keydown', (e) => {
+    if (e.key === "Enter"){
+      e.preventDefault();
+      checkAnswer();
+    }
+  });
+  newSeriesBtn.addEventListener('click', resetSeries);
+  taskCountSel.addEventListener('change', resetSeries);
+  levelRadios.forEach(r => r.addEventListener('change', resetSeries));
+
+  resetSeries();
+})();
+</script>
+</body>
+</html>
